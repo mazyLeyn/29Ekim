@@ -230,10 +230,27 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   var theme='red', out=$('out');
   var T={red:{bg:'#E30A17',fg:'#FFFFFF',em:'#8F0711'},white:{bg:'#FFFFFF',fg:'#E30A17',em:'#FBD3D6'},dark:{bg:'#1B0507',fg:'#FFFFFF',em:'#E30A17'}};
   function wrap(c,t,w){var ws=t.split(' '),l=[],cur='';ws.forEach(function(x){var tt=cur?cur+' '+x:x;if(c.measureText(tt).width>w&&cur){l.push(cur);cur=x}else{cur=tt}});l.push(cur);return l}
+
+  // Atatürk fotoğrafını önceden yükle
+  var ataImg=new Image(); ataImg.crossOrigin='anonymous'; var ataReady=false;
+  ataImg.onload=function(){ ataReady=true; draw(); };
+  ataImg.src='ataturk.jpg';
+
   function draw(){
     var n=personName(), c=document.createElement('canvas'); c.width=1080; c.height=1920;
     var x=c.getContext('2d'), p=T[theme], F="Fraunces,Georgia,'Times New Roman',serif";
     x.fillStyle=p.bg; x.fillRect(0,0,1080,1920);
+
+    // Atatürk portresi — kartın sağ üst köşesine yarı saydam
+    if(ataReady){
+      var iw=ataImg.naturalWidth, ih=ataImg.naturalHeight;
+      var drawH=920, drawW=drawH*(iw/ih);
+      x.save();
+      x.globalAlpha = theme==='white' ? 0.10 : 0.18;
+      x.drawImage(ataImg, 1080-drawW+60, 40, drawW, drawH);
+      x.restore();
+    }
+
     x.save(); x.translate(60,170); x.scale(4.8,4.8); x.fillStyle=p.em;
     var a=Math.atan2(36.7,50), b=Math.atan2(36.7,34);
     x.beginPath(); x.arc(76,100,62,a,-a,false); x.arc(92,100,50,-b,b,true); x.closePath(); x.fill();
