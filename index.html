@@ -193,7 +193,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 
 <section class="card-sec">
   <h2>Bayram kartını paylaş</h2>
-  <p>Rengini seç, hikâye boyutunda hazır görseli tek dokunuşla paylaş.</p>
+  <p>Rengini seç, hikâye boyutunda hazır görseli tek dokunuşla indir.</p>
   <div class="themes" role="group" aria-label="Kart rengi">
     <button class="th on" data-t="red">Kırmızı</button>
     <button class="th" data-t="white">Beyaz</button>
@@ -201,11 +201,11 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   </div>
   <div class="stage"><img id="out" alt="Bayram kartı önizlemesi" width="1080" height="1920"></div>
   <div class="btns">
-    <button id="share">Görseli paylaş</button>
+    <button id="share">Görseli indir</button>
     <button id="copy" class="alt">Linki kopyala</button>
   </div>
   <div class="toast" id="toast" role="status"></div>
-  <p class="minik">Paylaş menüsü açılmazsa görsele basılı tut ve fotoğraflara kaydet.</p>
+  <p class="minik">İndirme olmazsa görsele basılı tut ve fotoğraflara kaydet.</p>
 </section>
 
 <section class="asc"><pre id="asc" aria-hidden="true"></pre><p>Ne mutlu Türk’üm diyene!</p></section>
@@ -405,10 +405,10 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   $('share').addEventListener('click',function(){
     var c=out._c; if(!c){return}
     c.toBlob(function(bl){
-      var f=new File([bl],'29-ekim-kart.png',{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[f]})){
-        navigator.share({files:[f],text:text()}).catch(function(e){ if(e&&e.name!=='AbortError') msg('Görsele basılı tut ve kaydet'); });
-      } else { msg('Görsele basılı tutup fotoğraflara kaydet'); }
+      var u=URL.createObjectURL(bl),a=document.createElement('a');
+      a.href=u; a.download='29-ekim-kart.png'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u)},4000);
+      msg('Görsel indiriliyor');
     },'image/png');
   });
 })();
