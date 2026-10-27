@@ -178,10 +178,8 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 </section>
 
 <section class="card-sec">
-  <h2>Kendi bayram kartını yap</h2>
-  <p>Adını yaz, rengini seç. Hikâye boyutunda hazır bir görsel çıkar, tek dokunuşla paylaşırsın.</p>
-  <label for="name">Adın</label>
-  <input id="name" type="text" maxlength="24" placeholder="Örn. Elif" autocomplete="given-name">
+  <h2>Bayram kartını paylaş</h2>
+  <p>Rengini seç, hikâye boyutunda hazır görseli tek dokunuşla paylaş.</p>
   <div class="themes" role="group" aria-label="Kart rengi">
     <button class="th on" data-t="red">Kırmızı</button>
     <button class="th" data-t="white">Beyaz</button>
@@ -224,9 +222,8 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   tick(); setInterval(tick,1000);
 
   // Kart
-  var input=$('name'), toast=$('toast');
+  var toast=$('toast');
   function msg(t){toast.textContent=t; setTimeout(function(){toast.textContent=''},2500)}
-  function personName(){return input.value.trim()}
   var theme='red', out=$('out');
   var T={red:{bg:'#E30A17',fg:'#FFFFFF',em:'#8F0711'},white:{bg:'#FFFFFF',fg:'#E30A17',em:'#FBD3D6'},dark:{bg:'#1B0507',fg:'#FFFFFF',em:'#E30A17'}};
   function wrap(c,t,w){var ws=t.split(' '),l=[],cur='';ws.forEach(function(x){var tt=cur?cur+' '+x:x;if(c.measureText(tt).width>w&&cur){l.push(cur);cur=x}else{cur=tt}});l.push(cur);return l}
@@ -234,30 +231,28 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   // Atatürk fotoğrafını önceden yükle
   var ataImg=new Image(); ataImg.crossOrigin='anonymous'; var ataReady=false;
   ataImg.onload=function(){ ataReady=true; draw(); };
-  ataImg.src='ataturk.jpg';
+  ataImg.src='mustafa kemal atat%C3%BCrk 2.png';
 
   function draw(){
-    var n=personName(), c=document.createElement('canvas'); c.width=1080; c.height=1920;
+    var c=document.createElement('canvas'); c.width=1080; c.height=1920;
     var x=c.getContext('2d'), p=T[theme], F="Fraunces,Georgia,'Times New Roman',serif";
     x.fillStyle=p.bg; x.fillRect(0,0,1080,1920);
 
-    // Atatürk portresi — kartın ortasında, yazıların arkasında zarif yerleşim
+    // Atatürk silüeti — ortada, yazıların arkasında
     if(ataReady){
       var iw=ataImg.naturalWidth, ih=ataImg.naturalHeight;
-      var drawH=780, drawW=drawH*(iw/ih);
-      var px=1080-drawW-40, py=460;
+      var drawH=860, drawW=drawH*(iw/ih);
+      var px=(1080-drawW)/2, py=340;
+      // Silüeti tema rengine boyamak için geçici canvas
+      var tc=document.createElement('canvas'); tc.width=Math.ceil(drawW); tc.height=Math.ceil(drawH);
+      var tx=tc.getContext('2d');
+      tx.drawImage(ataImg,0,0,drawW,drawH);
+      tx.globalCompositeOperation='source-in';
+      tx.fillStyle=p.fg;
+      tx.fillRect(0,0,drawW,drawH);
       x.save();
-      x.globalAlpha = theme==='white' ? 0.15 : 0.25;
-      x.drawImage(ataImg, px, py, drawW, drawH);
-      x.restore();
-      // Portre kenarlarını arka plana yumuşak geçişle eritme
-      x.save();
-      var gx=px+drawW/2, gy=py+drawH/2, gr=drawH*0.58;
-      var fade=x.createRadialGradient(gx,gy,gr*0.7,gx,gy,gr);
-      fade.addColorStop(0,'rgba(0,0,0,0)');
-      fade.addColorStop(1,p.bg);
-      x.fillStyle=fade;
-      x.fillRect(px-40,py-40,drawW+80,drawH+80);
+      x.globalAlpha=0.12;
+      x.drawImage(tc,px,py);
       x.restore();
     }
 
@@ -274,12 +269,12 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     x.font='700 170px '+F; x.fillText('Ekim',60,1560);
     if(ls) x.letterSpacing='0px';
     x.font='700 70px '+F;
-    var m=n ? n+', Cumhuriyet Bayramın kutlu olsun!' : 'Cumhuriyet Bayramımız kutlu olsun!';
+    var m='Cumhuriyet Bayramımız kutlu olsun!';
     wrap(x,m,960).slice(0,3).forEach(function(l,k){x.fillText(l,60,1670+k*84)});
     x.globalAlpha=.8; x.font='400 38px '+F; x.fillText('29 Ekim 1923 – 29 Ekim 2026 · 103. yıl',60,1884); x.globalAlpha=1;
     out.src=c.toDataURL('image/png'); out._c=c;
   }
-  input.addEventListener('input',draw);
+
   Array.prototype.forEach.call(document.querySelectorAll('.th'),function(b){
     b.addEventListener('click',function(){
       theme=b.getAttribute('data-t');
@@ -292,8 +287,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     Promise.all([document.fonts.load('900 100px Fraunces'),document.fonts.load('700 100px Fraunces'),document.fonts.load('400 40px Fraunces')]).then(draw,draw);
   }
   function text(){
-    var n=personName();
-    return (n? n+', ' : '')+'Cumhuriyet Bayramın kutlu olsun! 29 Ekim 1923 – 103. yıl 🇹🇷';
+    return 'Cumhuriyet Bayramımız kutlu olsun! 29 Ekim 1923 – 103. yıl 🇹🇷';
   }
   function copyLink(){
     var url=location.href;
