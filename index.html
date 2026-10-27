@@ -145,6 +145,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 .fbb button:disabled{opacity:.4;cursor:default}
 .fbb button.sel{opacity:1;background:var(--red);box-shadow:none}
 .fbt{margin-top:12px;min-height:1.3em;font-size:.82rem;opacity:.75}
+.inf{display:inline-block;transform:rotate(90deg);margin:0 .22em 0 .12em;font-size:1.2em;line-height:1;vertical-align:-.06em;font-weight:700;color:var(--red)}
 </style>
 </head>
 <body>
@@ -161,7 +162,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 <section class="portrait" id="portrait">
   <figure><img src="ataturk.jpg" alt="Mustafa Kemal Atatürk" loading="lazy" onerror="document.getElementById('portrait').style.display='none'"></figure>
   <h2>Mustafa Kemal Atatürk</h2>
-  <p>Millî Mücadele’nin başkomutanı, Türkiye Cumhuriyeti’nin kurucusu ve ilk cumhurbaşkanı. 1881 – 1938</p>
+  <p>Millî Mücadele’nin başkomutanı, Türkiye Cumhuriyeti’nin kurucusu ve ilk cumhurbaşkanı. <span aria-label="1881 – 1938">1881 – 193<span class="inf" aria-hidden="true">8</span></span></p>
 </section>
 
 <section class="sec">
