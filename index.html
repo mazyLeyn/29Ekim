@@ -241,13 +241,23 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     var x=c.getContext('2d'), p=T[theme], F="Fraunces,Georgia,'Times New Roman',serif";
     x.fillStyle=p.bg; x.fillRect(0,0,1080,1920);
 
-    // Atatürk portresi — kartın sağ üst köşesine yarı saydam
+    // Atatürk portresi — kartın ortasında, yazıların arkasında zarif yerleşim
     if(ataReady){
       var iw=ataImg.naturalWidth, ih=ataImg.naturalHeight;
-      var drawH=920, drawW=drawH*(iw/ih);
+      var drawH=780, drawW=drawH*(iw/ih);
+      var px=1080-drawW-40, py=460;
       x.save();
-      x.globalAlpha = theme==='white' ? 0.10 : 0.18;
-      x.drawImage(ataImg, 1080-drawW+60, 40, drawW, drawH);
+      x.globalAlpha = theme==='white' ? 0.15 : 0.25;
+      x.drawImage(ataImg, px, py, drawW, drawH);
+      x.restore();
+      // Portre kenarlarını arka plana yumuşak geçişle eritme
+      x.save();
+      var gx=px+drawW/2, gy=py+drawH/2, gr=drawH*0.58;
+      var fade=x.createRadialGradient(gx,gy,gr*0.7,gx,gy,gr);
+      fade.addColorStop(0,'rgba(0,0,0,0)');
+      fade.addColorStop(1,p.bg);
+      x.fillStyle=fade;
+      x.fillRect(px-40,py-40,drawW+80,drawH+80);
       x.restore();
     }
 
