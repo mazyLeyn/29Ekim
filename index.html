@@ -135,6 +135,16 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 .lb img{max-width:100%;max-height:78vh;border-radius:10px;object-fit:contain}
 .lb p{margin-top:14px;max-width:34em;text-align:center;font-size:.95rem}
 .lbx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:14px;flex:none;width:44px;min-height:44px;padding:0;background:rgba(255,255,255,.16);color:#fff;font-size:1.1rem}
+.fb{background:#000;color:#fff;text-align:center;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px))}
+.fb h2{font-size:1rem;font-weight:700;letter-spacing:.02em;opacity:.85}
+.fbb{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.fbb button{flex:none;min-height:38px;padding:0 18px;font-size:.88rem;font-weight:700;border-radius:999px;background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:8px;transition:background .2s,box-shadow .2s}
+.fbb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(hover:hover){.fbb button:not(:disabled):hover{background:var(--red);box-shadow:none}}
+.fbb button:not(:disabled):active{background:var(--red);box-shadow:none}
+.fbb button:disabled{opacity:.4;cursor:default}
+.fbb button.sel{opacity:1;background:var(--red);box-shadow:none}
+.fbt{margin-top:12px;min-height:1.3em;font-size:.82rem;opacity:.75}
 </style>
 </head>
 <body>
@@ -243,6 +253,12 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
 
 <footer>Cumhuriyet’imiz 103 yaşında!<small>29 Ekim 1923 – 29 Ekim 2026</small><small><a href="https://instagram.com/onur.k4ts" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Hazırlayan: @onur.k4ts</a></small></footer>
 
+<section class="fb" aria-labelledby="fbq">
+  <h2 id="fbq">Sayfayı beğendin mi?</h2>
+  <div class="fbb" id="fbb"><button id="fy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>Beğendim</button><button id="fn"><svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(180 12 12)"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></g></svg>Beğenmedim</button></div>
+  <p class="fbt" id="fbt" role="status" aria-live="polite"></p>
+</section>
+
 <script>
 (function(){
   var $=function(i){return document.getElementById(i)};
@@ -265,6 +281,21 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     $('s').textContent=pad(s%60);
   }
   tick(); setInterval(tick,1000);
+  // Beğeni oyu (Google Sheets'e gider)
+  (function(){
+    var ENDPOINT='https://script.google.com/macros/s/AKfycbzYVV2R1eb0spEqN5hTw1cePZYwPZmcqd03e8qX0F7YtsE519cGnRjZfN76CIq1oTEh_w/exec';
+    var fy=$('fy'),fn=$('fn'),fbt=$('fbt');
+    function done(m,v){fy.disabled=true;fn.disabled=true;fbt.textContent=m;(v==='begendim'?fy:v==='begenmedim'?fn:{classList:{add:function(){}}}).classList.add('sel')}
+    try{ var old=localStorage.getItem('oy29'); if(old){done('Oyun için teşekkürler.',old);} }catch(e){}
+    function vote(v){
+      done('Teşekkürler, oyun kaydedildi.',v);
+      try{localStorage.setItem('oy29',v)}catch(e){}
+      if(ENDPOINT.indexOf('https://')!==0)return;
+      try{fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({oy:v})}).catch(function(){})}catch(e){}
+    }
+    fy.addEventListener('click',function(){vote('begendim')});
+    fn.addEventListener('click',function(){vote('begenmedim')});
+  })();
   // Fotoğraf arşivi
   (function(){
     var lb=$('lb'),li=$('lbi'),lc=$('lbc');
