@@ -65,9 +65,12 @@ body::before{ content:""; position:fixed; inset:0 0 auto; height:env(safe-area-i
 .q:nth-child(even) button{background:var(--red);color:#fff}
 .tl{background:var(--bg);padding:56px 22px 20px}
 .tl h2{font-weight:900;font-size:clamp(1.8rem,8vw,2.6rem);line-height:1.08;letter-spacing:-.02em}
-.tl ol{list-style:none;padding:0;margin:28px 0 0 8px;border-left:3px solid var(--red)}
+.tl ol{position:relative;list-style:none;padding:0;margin:28px 0 0 8px;border-left:3px solid rgba(227,10,23,.22)}
+.tl ol::before{content:"";position:absolute;left:-3px;top:0;width:3px;height:var(--p,0%);background:var(--red)}
+.tl li.on::before{background:var(--red)}
+.age{font-weight:700;color:var(--red)}
 .tl li{position:relative;padding:0 0 26px 22px}
-.tl li::before{content:"";position:absolute;left:-11px;top:6px;width:19px;height:19px;border-radius:50%;background:var(--red);border:4px solid var(--bg)}
+.tl li::before{content:"";position:absolute;left:-11px;top:6px;width:19px;height:19px;border-radius:50%;background:rgba(227,10,23,.3);border:4px solid var(--bg);transition:background .4s}
 .tl b{display:block;font-size:1.5rem;font-weight:900;color:var(--red);line-height:1.15}
 .tl span{opacity:.85}
 .tl li.big b{font-size:2rem}
@@ -148,6 +151,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   </div>
   <p class="today" id="today">Bugün 29 Ekim. Bayramımız kutlu olsun!</p>
   <p class="fact">29 Ekim 1923’te Türkiye Cumhuriyeti ilan edildi. Bu yıl 103. yılını kutluyoruz.</p>
+  <p class="fact age" id="age"></p>
 </section>
 
 <section class="qs">
@@ -161,6 +165,16 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     <div class="q"><div><p>Sanatsız kalan bir milletin hayat damarlarından biri kopmuş demektir.</p><div class="an">Sanat, bir toplumun canlılığıdır. Sanatı olmayan millet eksik kalır.</div></div><div class="qf"><span>Mustafa Kemal Atatürk</span></div></div>
     <div class="q"><div><p>Muallimler! Yeni nesil sizin eseriniz olacaktır.</p><div class="an">Geleceğin nesilleri öğretmenlerin emeğiyle yetişir.</div></div><div class="qf"><span>Mustafa Kemal Atatürk</span></div></div>
     <div class="q"><div><p>Ey Türk gençliği! Birinci vazifen, Türk istiklalini, Türk Cumhuriyetini, ilelebet muhafaza ve müdafaa etmektir.</p><div class="an">Gençlerin ilk görevi, ülkenin bağımsızlığını ve Cumhuriyet’i her zaman korumaktır.</div></div><div class="qf"><span>Gençliğe Hitabe</span></div></div>
+  </div>
+</section>
+
+<section class="qs">
+  <h2>Biliyor muydun?</h2>
+  <p class="kay">Yana kaydır.</p>
+  <div class="track">
+    <div class="q"><div><p>Ankara, Cumhuriyet’ten 16 gün önce başkent oldu.</p><div class="an">13 Ekim 1923’te Ankara başkent ilan edildi.</div></div><div class="qf"><span>13 Ekim 1923</span></div></div>
+    <div class="q"><div><p>101 pare top atışı.</p><div class="an">Cumhuriyet’in ilanını anmak için her 29 Ekim’de 101 pare top atılır.</div></div><div class="qf"><span>Bayram geleneği</span></div></div>
+    <div class="q"><div><p>İlk hükûmeti İsmet Paşa kurdu.</p><div class="an">Cumhuriyet ilan edildikten sonra hükûmeti kurma görevi İsmet Paşa’ya verildi.</div></div><div class="qf"><span>Ekim 1923</span></div></div>
   </div>
 </section>
 
@@ -220,6 +234,36 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
     $('s').textContent=pad(s%60);
   }
   tick(); setInterval(tick,1000);
+  // Cumhuriyet kaç günlük
+  (function(){var dd=Math.floor((new Date()-new Date(1923,9,29))/864e5);$('age').textContent='Cumhuriyet tam '+dd.toLocaleString('tr-TR')+' günlük.'})();
+  // Çizelge dolsun
+  (function(){
+    var ol=document.querySelector('.tl ol'),lis=ol.querySelectorAll('li'),calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,tk=false;
+    function upd(){
+      var r=ol.getBoundingClientRect(),y=innerHeight*0.65,pr=calm?1:Math.max(0,Math.min(1,(y-r.top)/r.height));
+      ol.style.setProperty('--p',(pr*100)+'%');
+      Array.prototype.forEach.call(lis,function(l){var lr=l.getBoundingClientRect();l.classList.toggle('on',calm||lr.top+8<y)});
+    }
+    addEventListener('scroll',function(){if(tk)return;tk=true;requestAnimationFrame(function(){upd();tk=false})},{passive:true});
+    addEventListener('resize',upd);upd();
+  })();
+  // 29 Ekim konfetisi (bir kere)
+  (function(){
+    var n=new Date();
+    if(!(n.getFullYear()===2026&&n.getMonth()===9&&n.getDate()===29))return;
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    setTimeout(function(){
+      var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20';
+      var W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext('2d'),cols=['#E30A17','#FFFFFF','#8F0711'],P=[];
+      for(var i=0;i<90;i++)P.push({x:Math.random()*W,y:-20-Math.random()*H*0.5,w:6+Math.random()*6,h:10+Math.random()*8,vy:2+Math.random()*3,vx:(Math.random()-.5)*2,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[i%3]});
+      document.body.appendChild(c);var t0=null;
+      (function f(ts){
+        if(t0===null)t0=ts;var e=ts-t0;x.clearRect(0,0,W,H);
+        P.forEach(function(q){q.x+=q.vx;q.y+=q.vy;q.r+=q.vr;x.save();x.translate(q.x,q.y);x.rotate(q.r);x.globalAlpha=Math.max(0,1-e/4200);x.fillStyle=q.c;x.fillRect(-q.w/2,-q.h/2,q.w,q.h);x.restore()});
+        if(e<4200)requestAnimationFrame(f);else c.remove();
+      })(performance.now());
+    },700);
+  })();
 
   // Kart
   var toast=$('toast');
