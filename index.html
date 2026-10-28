@@ -244,7 +244,7 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   <div class="stage"><img id="out" alt="Bayram kartı önizlemesi" width="1080" height="1920"></div>
   <div class="btns">
     <button id="share">Görseli indir</button>
-    <button id="copy" class="alt">Linki kopyala</button>
+    <button id="copy" class="alt">Sayfayı paylaş</button>
   </div>
   <div class="toast" id="toast" role="status"></div>
   <p class="minik">İndirme olmazsa görsele basılı tut ve fotoğraflara kaydet.</p>
@@ -399,8 +399,12 @@ footer small{ display:block; font-weight:400; opacity:.8; margin-top:6px; }
   }
   function copyLink(){
     var url=location.href;
+    if(navigator.share){
+      navigator.share({title:'29 Ekim · Cumhuriyet Bayramı',text:'Cumhuriyet Bayramımız kutlu olsun!',url:url}).catch(function(){});
+      return;
+    }
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){msg('Link kopyalandı')},function(){msg('Linki adres çubuğundan kopyala')});
+      navigator.clipboard.writeText(url).then(function(){msg('Sayfa linki kopyalandı')},function(){msg('Linki adres çubuğundan kopyala')});
     } else { msg('Linki adres çubuğundan kopyala'); }
   }
   $('copy').addEventListener('click',copyLink);
